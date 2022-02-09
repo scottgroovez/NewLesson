@@ -1,6 +1,5 @@
 import type { AnimateAsset } from '../flash/types';
-import { Ticker, Graphics, Container } from 'pixi.js';
-import { Loader, MovieClip, Sprite, Text } from '../flash';
+import { Button, Loader, MovieClip, Sprite, Text, Ticker, Graphics, Container } from '../flash';
 import { MovieClipSimpleAnimator } from './MovieClipSimpleAnimator';
 import gsap from 'gsap';
 
@@ -13,6 +12,8 @@ class WzUnitTestSample extends Sprite {
   pBallCount!: Text;
   pBallContainer!: Container;
   pBallInterval!: NodeJS.Timer;
+  pType: 'circle' | 'ball' = 'circle';
+  btn!: Button;
   constructor() {
     super();
     this.fSetup();
@@ -62,21 +63,47 @@ class WzUnitTestSample extends Sprite {
 
     this.fRunIt();
 
-    this.pBallInterval = setInterval(() => this.addObject(), 10);
-
     setInterval(() => this.pFps.text = `FPS: ${Math.round(Ticker.shared.FPS)}`, 100);
+
+    const btn = new Button(this.getLabel());
+    btn.x = 10;
+    btn.y = 380;
+    btn.on('pointerdown', () => {
+      this.pType = this.pType === 'circle' ? 'ball' : 'circle';
+      btn.label = this.getLabel();
+      this.reset();
+    });
+    this.addChild(btn);
+
+    this.btn = btn;
+    
+    this.reset();
+  }
+
+  getLabel() {
+    return this.pType === 'circle' ? 'Circles' : 'Balls';
+  }
+
+  reset() {
+    clearInterval(this.pBallInterval);
+    this.pBallContainer.removeChildren();
+    this.pBallInterval = setInterval(() => this.addObject(), 10);
+  }
+
+  ballType() {
+    if (this.pType === 'circle') {
+      const ball = new Graphics();
+      ball.beginFill(0xCCCCCC);
+      ball.lineStyle(1, 0x000000);
+      ball.drawCircle(0,0, 20);
+      return ball;
+    } else {
+      return this.fGetDisplayObject('ball_select');
+    }
   }
 
   addObject() {
-
-    const ball = new Graphics();
-    ball.beginFill(0xCCCCCC);
-    ball.lineStyle(1, 0x000000);
-    ball.drawCircle(0,0, 20);
-
-    /*
-    const ball = this.fGetDisplayObject('ball_select');
-    */
+    const ball = this.ballType();
     ball.x = gsap.utils.random(10, 540);
     ball.y = 10;
     this.pBallContainer.addChild(ball);
@@ -87,7 +114,7 @@ class WzUnitTestSample extends Sprite {
 
   updateDisplay() {
     const count = this.pBallContainer.children.length;
-    this.pBallCount.text = `Balls: ${count}`;
+    this.pBallCount.text = `Items: ${count}`;
 
     if (count >= 10000) {
       clearInterval(this.pBallInterval);

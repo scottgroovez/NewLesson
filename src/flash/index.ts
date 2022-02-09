@@ -1,12 +1,17 @@
+import { Button } from './display/Button';
 import { Loader } from './display/Loader';
 import { MovieClip } from './display/MovieClip';
 import { Sprite } from './display/Sprite';
-import { Application, Text } from 'pixi.js';
+import { Application, Container, Graphics, Text, Ticker } from 'pixi.js';
 
 export {
   Application,
+  Button,
+  Container,
+  Graphics,
   Loader,
   MovieClip,
   Sprite,
   Text,
+  Ticker,
 };
