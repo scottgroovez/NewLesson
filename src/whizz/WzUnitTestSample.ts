@@ -68,13 +68,15 @@ class WzUnitTestSample extends Sprite {
   }
 
   addObject() {
-    /*
-    const ball = new Graphics();//this.fGetDisplayObject('ball_select');
+
+    const ball = new Graphics();
     ball.beginFill(0xCCCCCC);
     ball.lineStyle(1, 0x000000);
     ball.drawCircle(0,0, 20);
-    */
+
+    /*
     const ball = this.fGetDisplayObject('ball_select');
+    */
     ball.x = gsap.utils.random(10, 540);
     ball.y = 10;
     this.pBallContainer.addChild(ball);
