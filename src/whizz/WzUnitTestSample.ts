@@ -87,7 +87,7 @@ class WzUnitTestSample extends Sprite {
   reset() {
     clearInterval(this.pBallInterval);
     this.pBallContainer.removeChildren();
-    this.pBallInterval = setInterval(() => this.addObject(), 100);
+    this.pBallInterval = setInterval(() => this.addObject(), 1000);
   }
 
   ballType() {
@@ -107,7 +107,7 @@ class WzUnitTestSample extends Sprite {
     ball.x = gsap.utils.random(10, 540);
     ball.y = gsap.utils.random(10, 200);
     this.pBallContainer.addChild(ball);
-    gsap.to(ball, { duration: 2, y: 375, ease: 'bounce.out' });
+    //gsap.to(ball, { duration: 2, y: 375, ease: 'bounce.out' });
 
     this.updateDisplay();
   }
