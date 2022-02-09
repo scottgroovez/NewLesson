@@ -28,6 +28,9 @@ import { MovieClip } from '@pixi/animate';
 		private const pAnimator:MovieClipSimpleAnimator
 		private static const pIgnoreFrameEventFromGoToAndStop:boolean
 		
+		/*
+		Load in Media (swf)
+		*/
 		public function WzUnitTestSample()
 		{
 			super();
