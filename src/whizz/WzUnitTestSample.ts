@@ -98,7 +98,7 @@ class WzUnitTestSample extends Sprite {
       ball.drawCircle(0,0, 20);
       return ball;
     } else {
-      return this.fGetDisplayObject('ball_select');
+      return this.fGetDisplayObject('Graphic1');
     }
   }
 
