@@ -26,7 +26,7 @@ class WzUnitTestSample extends Sprite {
   }
 
   fGetDisplayObject(tName: string) {
-    return new this.pSkin.lib[tName]() as MovieClip;
+    return new this.pSkin.lib[tName]();
   }
 
   fLoadComplete(asset: AnimateAsset, loader: Loader) {
@@ -36,6 +36,11 @@ class WzUnitTestSample extends Sprite {
     //@ts-ignore
     //const worm = stage.payoff2;
     //worm.play();
+
+    const anim = this.fGetDisplayObject('payoff2') as MovieClip;
+    anim.x = 275;
+    anim.y = 350;
+    this.addChild(anim);
 
     this.pBallContainer = new Container();
     this.addChild(this.pBallContainer);
@@ -49,11 +54,6 @@ class WzUnitTestSample extends Sprite {
     this.pBallCount.x = 10;
     this.pBallCount.y = 50;
     this.addChild(this.pBallCount);
-
-    const anim = this.fGetDisplayObject('payoff2');
-    anim.x = 275;
-    anim.y = 350;
-    this.addChild(anim);
 
     this.pAnimator = new MovieClipSimpleAnimator(anim, 20);
     this.pAnimator.fSetCallback(() => this.fRunIt());
@@ -87,7 +87,7 @@ class WzUnitTestSample extends Sprite {
   reset() {
     clearInterval(this.pBallInterval);
     this.pBallContainer.removeChildren();
-    this.pBallInterval = setInterval(() => this.addObject(), 10);
+    this.pBallInterval = setInterval(() => this.addObject(), 100);
   }
 
   ballType() {
@@ -105,7 +105,7 @@ class WzUnitTestSample extends Sprite {
   addObject() {
     const ball = this.ballType();
     ball.x = gsap.utils.random(10, 540);
-    ball.y = 10;
+    ball.y = gsap.utils.random(10, 200);
     this.pBallContainer.addChild(ball);
     gsap.to(ball, { duration: 2, y: 375, ease: 'bounce.out' });
 
