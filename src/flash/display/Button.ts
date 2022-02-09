@@ -11,10 +11,11 @@ class Button extends Sprite {
 
     const btn = new Graphics();
     btn.beginFill(0xCCCCCC);
-    btn.drawRect(0, 0, 100, 50);
+    btn.drawRect(-50, -25, 100, 50);
     this.addChild(btn);
 
     this.btnLabel = new Text(label);
+    this.btnLabel.anchor.set(0.5);
     this.addChild(this.btnLabel);
     
   }

@@ -66,7 +66,7 @@ class WzUnitTestSample extends Sprite {
     setInterval(() => this.pFps.text = `FPS: ${Math.round(Ticker.shared.FPS)}`, 100);
 
     const btn = new Button(this.getLabel());
-    btn.x = 10;
+    btn.x = 60;
     btn.y = 380;
     btn.on('pointerdown', () => {
       this.pType = this.pType === 'circle' ? 'ball' : 'circle';
