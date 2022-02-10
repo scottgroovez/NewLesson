@@ -2,6 +2,7 @@ import type { AnimateAsset } from '../flash/types';
 import { Button, Loader, MovieClip, Sprite, Text, Ticker, Graphics, Container } from '../flash';
 import { MovieClipSimpleAnimator } from './MovieClipSimpleAnimator';
 import gsap from 'gsap';
+import * as PIXI from 'pixi.js';
 
 class WzUnitTestSample extends Sprite {
   static pIgnoreFrameEventFromGoToAndStop: boolean;
@@ -11,8 +12,9 @@ class WzUnitTestSample extends Sprite {
   pFps!: Text;
   pBallCount!: Text;
   pBallContainer!: Container;
-  pType: 'circle' | 'ball' = 'circle';
+  pType: 'circle' | 'ball' = 'ball';
   btn!: Button;
+  pTexture!: PIXI.RenderTexture;
   constructor() {
     super();
     this.fSetup();
@@ -35,6 +37,9 @@ class WzUnitTestSample extends Sprite {
     //@ts-ignore
     //const worm = stage.payoff2;
     //worm.play();
+    //const renderer = PIXI.autoDetectRenderer();
+    //this.pTexture = PIXI.RenderTexture.create({ width: 50, height: 50 });
+    //renderer.render(this.fGetDisplayObject('Graphic1'), { renderTexture: this.pTexture })
 
     const anim = this.fGetDisplayObject('payoff2') as MovieClip;
     anim.x = 275;
@@ -57,9 +62,9 @@ class WzUnitTestSample extends Sprite {
     this.pAnimator = new MovieClipSimpleAnimator(anim, 20);
     this.pAnimator.fSetCallback(() => this.fRunIt());
 
+
     Ticker.shared
       .add(() => this.fAction())
-      .add(() => this.addObject())
 
     this.fRunIt();
 
@@ -76,6 +81,8 @@ class WzUnitTestSample extends Sprite {
     this.addChild(btn);
 
     this.btn = btn;
+
+    this.reset();
   }
 
   getLabel() {
@@ -84,6 +91,10 @@ class WzUnitTestSample extends Sprite {
 
   reset() {
     this.pBallContainer.removeChildren();
+    for(var i = 0; i < 500; i++) {
+      this.addObject();
+    }
+    this.updateDisplay();
   }
 
   ballType() {
@@ -104,16 +115,15 @@ class WzUnitTestSample extends Sprite {
     }
     const ball = this.ballType();
     ball.x = gsap.utils.random(10, 540);
-    ball.y = gsap.utils.random(10, 200);
+    ball.y = 10;//gsap.utils.random(10, 200);
     this.pBallContainer.addChild(ball);
-    gsap.to(ball, { duration: 2, y: 375, ease: 'bounce.out', repeat: -1 });
-
-    this.updateDisplay();
   }
 
   updateDisplay() {
     const count = this.pBallContainer.children.length;
     this.pBallCount.text = `Items: ${count}`;
+
+    gsap.to(this.pBallContainer.children, { stagger: 0.01, duration: 2, y: 375, ease: 'bounce.out', repeat: -1 });
   }
 
   fAction() {
