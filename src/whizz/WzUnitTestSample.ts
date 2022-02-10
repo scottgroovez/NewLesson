@@ -12,7 +12,7 @@ class WzUnitTestSample extends Sprite {
   pFps!: Text;
   pBallCount!: Text;
   pBallContainer!: Container;
-  pType: 'circle' | 'ball' = 'ball';
+  pType: 'circle' | 'ball' = 'circle';
   btn!: Button;
   pTexture!: PIXI.RenderTexture;
   constructor() {
