@@ -8,7 +8,6 @@ class WzUnitTestSample extends Sprite {
   pAnimator!: MovieClipSimpleAnimator;
   pSkin!: AnimateAsset;
   pLoader!: Loader;
-  pFps!: Text;
   pBallCount!: Text;
   pBallContainer!: Container;
   pBallInterval!: NodeJS.Timer;
@@ -45,25 +44,20 @@ class WzUnitTestSample extends Sprite {
     this.pBallContainer = new Container();
     this.addChild(this.pBallContainer);
 
-    this.pFps = new Text('');
-    this.pFps.x = 10;
-    this.pFps.y = 10;
-    this.addChild(this.pFps);
-
     this.pBallCount = new Text('');
     this.pBallCount.x = 10;
-    this.pBallCount.y = 50;
+    this.pBallCount.y = 320;
     this.addChild(this.pBallCount);
 
     this.pAnimator = new MovieClipSimpleAnimator(anim, 20);
     this.pAnimator.fSetCallback(() => this.fRunIt());
 
-    Ticker.shared
-      .add(() => this.fAction())
+    Ticker.shared.add(() => {
+      this.addObject();
+      this.fAction();
+    });
 
     this.fRunIt();
-
-    setInterval(() => this.pFps.text = `FPS: ${Math.round(Ticker.shared.FPS)}`, 100);
 
     const btn = new Button(this.getLabel());
     btn.x = 60;
@@ -76,8 +70,6 @@ class WzUnitTestSample extends Sprite {
     this.addChild(btn);
 
     this.btn = btn;
-    
-    this.reset();
   }
 
   getLabel() {
@@ -85,9 +77,7 @@ class WzUnitTestSample extends Sprite {
   }
 
   reset() {
-    clearInterval(this.pBallInterval);
     this.pBallContainer.removeChildren();
-    this.pBallInterval = setInterval(() => this.addObject(), 1000);
   }
 
   ballType() {
@@ -107,7 +97,7 @@ class WzUnitTestSample extends Sprite {
     ball.x = gsap.utils.random(10, 540);
     ball.y = gsap.utils.random(10, 200);
     this.pBallContainer.addChild(ball);
-    //gsap.to(ball, { duration: 2, y: 375, ease: 'bounce.out' });
+    gsap.to(ball, { duration: 2, y: 375, ease: 'bounce.out', repeat: -1 });
 
     this.updateDisplay();
   }
@@ -115,10 +105,6 @@ class WzUnitTestSample extends Sprite {
   updateDisplay() {
     const count = this.pBallContainer.children.length;
     this.pBallCount.text = `Items: ${count}`;
-
-    if (count >= 10000) {
-      clearInterval(this.pBallInterval);
-    }
   }
 
   fAction() {
