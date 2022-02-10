@@ -11,7 +11,6 @@ class WzUnitTestSample extends Sprite {
   pFps!: Text;
   pBallCount!: Text;
   pBallContainer!: Container;
-  pBallInterval!: NodeJS.Timer;
   pType: 'circle' | 'ball' = 'circle';
   btn!: Button;
   constructor() {
@@ -60,6 +59,7 @@ class WzUnitTestSample extends Sprite {
 
     Ticker.shared
       .add(() => this.fAction())
+      .add(() => this.addObject())
 
     this.fRunIt();
 
@@ -76,8 +76,6 @@ class WzUnitTestSample extends Sprite {
     this.addChild(btn);
 
     this.btn = btn;
-    
-    this.reset();
   }
 
   getLabel() {
@@ -85,9 +83,7 @@ class WzUnitTestSample extends Sprite {
   }
 
   reset() {
-    clearInterval(this.pBallInterval);
     this.pBallContainer.removeChildren();
-    this.pBallInterval = setInterval(() => this.addObject(), 1000);
   }
 
   ballType() {
@@ -103,11 +99,14 @@ class WzUnitTestSample extends Sprite {
   }
 
   addObject() {
+    if (this.pBallContainer.children.length >= 10000) {
+      return;
+    }
     const ball = this.ballType();
     ball.x = gsap.utils.random(10, 540);
     ball.y = gsap.utils.random(10, 200);
     this.pBallContainer.addChild(ball);
-    //gsap.to(ball, { duration: 2, y: 375, ease: 'bounce.out' });
+    gsap.to(ball, { duration: 2, y: 375, ease: 'bounce.out', repeat: -1 });
 
     this.updateDisplay();
   }
@@ -115,10 +114,6 @@ class WzUnitTestSample extends Sprite {
   updateDisplay() {
     const count = this.pBallContainer.children.length;
     this.pBallCount.text = `Items: ${count}`;
-
-    if (count >= 10000) {
-      clearInterval(this.pBallInterval);
-    }
   }
 
   fAction() {
