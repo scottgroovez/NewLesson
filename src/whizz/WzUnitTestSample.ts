@@ -110,12 +110,12 @@ class WzUnitTestSample extends Sprite {
   }
 
   addObject() {
-    if (this.pBallContainer.children.length >= 10000) {
+    if (this.pBallContainer.children.length >= 100) {
       return;
     }
     const ball = this.ballType();
     ball.x = gsap.utils.random(10, 540);
-    ball.y = 10;//gsap.utils.random(10, 200);
+    ball.y = -20;//gsap.utils.random(10, 200);
     this.pBallContainer.addChild(ball);
   }
 
@@ -123,7 +123,7 @@ class WzUnitTestSample extends Sprite {
     const count = this.pBallContainer.children.length;
     this.pBallCount.text = `Items: ${count}`;
 
-    gsap.to(this.pBallContainer.children, { stagger: 0.01, duration: 2, y: 375, ease: 'bounce.out', repeat: -1 });
+    gsap.to(this.pBallContainer.children, { stagger: { each: 0.01, repeat: -1 }, ease: 'bounce.out', duration: 1.6, y: 375 });
   }
 
   fAction() {
