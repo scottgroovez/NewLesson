@@ -1,5 +1,5 @@
 import type { AnimateAsset } from '../flash/types';
-import { Button, Loader, MovieClip, Sprite, Text, Ticker, Graphics, Container } from '../flash';
+import { Button, Loader, MovieClip, Sprite, Text, Ticker, Graphics, Container, TextInput } from '../flash';
 import { MovieClipSimpleAnimator } from './MovieClipSimpleAnimator';
 import gsap from 'gsap';
 import * as PIXI from 'pixi.js';
@@ -27,7 +27,9 @@ class WzUnitTestSample extends Sprite {
   }
 
   fGetDisplayObject(tName: string) {
-    return new this.pSkin.lib[tName]();
+    const o = new this.pSkin.lib[tName]();
+    o.cacheAsBitmap = true;
+    return o;
   }
 
   fLoadComplete(asset: AnimateAsset, loader: Loader) {
@@ -81,6 +83,12 @@ class WzUnitTestSample extends Sprite {
     this.addChild(btn);
 
     this.btn = btn;
+
+    const input = new TextInput();
+
+    input.x = 275;
+    input.y = 200;
+    this.addChild(input);
 
     this.reset();
   }
