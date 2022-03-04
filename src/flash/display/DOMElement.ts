@@ -43,7 +43,14 @@ class DOMElement extends Container {
 
   private createDomElement(tagName: string) {
     this.domElement = document.createElement(tagName);
+    this.setStyles({})
+  }
 
+  public setStyles(styles: Record<string, unknown>) {
+    this.domElementStyles = {
+      ...this.domElementStyles,
+      ...styles,
+    }
     for(let key in this.domElementStyles){
 			this.domElement.style[key] = this.domElementStyles[key];
 		}

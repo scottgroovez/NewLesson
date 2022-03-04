@@ -4,7 +4,6 @@ import { MovieClip } from './display/MovieClip';
 import { Sprite } from './display/Sprite';
 import { DOMElement } from './display/DOMElement';
 import { TextInput } from './display/TextInput';
-import { Message } from './display/Message';
 import { Container } from './display/Container';
 import { Application, Graphics, Text, Ticker } from 'pixi.js';
 
@@ -18,7 +17,6 @@ export {
   Sprite,
   Text,
   TextInput,
-  Message,
   DOMElement,
   Ticker,
 };

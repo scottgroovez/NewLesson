@@ -1,6 +1,6 @@
-import { MovieClip } from '../flash';
-import type { FrameLabel } from '../flash/types'
-import { WzUnitTestSample } from './WzUnitTestSample';
+import { MovieClip } from '../../flash';
+import type { FrameLabel } from '../../flash/types'
+import { WzUnitTestSample } from '../WzUnitTestSample';
 
 
 class MovieClipSimpleAnimator {
