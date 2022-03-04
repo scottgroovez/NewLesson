@@ -1,5 +1,5 @@
 import type { AnimateAsset } from '../flash/types';
-import { Button, Loader, MovieClip, Sprite, Text, Ticker, Graphics, Container, TextInput } from '../flash';
+import { Button, Loader, MovieClip, Sprite, Text, Message, Ticker, Graphics, Container, TextInput } from '../flash';
 import { MovieClipSimpleAnimator } from './MovieClipSimpleAnimator';
 import gsap from 'gsap';
 import * as PIXI from 'pixi.js';
@@ -27,9 +27,7 @@ class WzUnitTestSample extends Sprite {
   }
 
   fGetDisplayObject(tName: string) {
-    const o = new this.pSkin.lib[tName]();
-    o.cacheAsBitmap = true;
-    return o;
+    return new this.pSkin.lib[tName]();
   }
 
   fLoadComplete(asset: AnimateAsset, loader: Loader) {
@@ -42,14 +40,30 @@ class WzUnitTestSample extends Sprite {
     //const renderer = PIXI.autoDetectRenderer();
     //this.pTexture = PIXI.RenderTexture.create({ width: 50, height: 50 });
     //renderer.render(this.fGetDisplayObject('Graphic1'), { renderTexture: this.pTexture })
+    const renderer = PIXI.autoDetectRenderer();
+
+    this.pBallContainer = new Container();
+    this.pBallContainer.interactiveChildren = true;
+
+    this.pBallContainer.interactive = true;
+    this.pBallContainer.interactiveChildren = true;
+    this.pBallContainer.on('pointerdown', () => {
+      const interaction = renderer.plugins.interaction;
+      const mousePosition = interaction.mouse.global;
+      const hitObject = interaction.hitTest(mousePosition, this.pBallContainer);
+      if (hitObject) {
+        hitObject.scale.set(2);
+      }
+    });
+
+    this.addChild(this.pBallContainer);
 
     const anim = this.fGetDisplayObject('payoff2') as MovieClip;
     anim.x = 275;
     anim.y = 350;
     this.addChild(anim);
 
-    this.pBallContainer = new Container();
-    this.addChild(this.pBallContainer);
+
 
     this.pFps = new Text('');
     this.pFps.x = 10;
@@ -64,9 +78,8 @@ class WzUnitTestSample extends Sprite {
     this.pAnimator = new MovieClipSimpleAnimator(anim, 20);
     this.pAnimator.fSetCallback(() => this.fRunIt());
 
-
     Ticker.shared
-      .add(() => this.fAction())
+    .add(() => this.fAction())
 
     this.fRunIt();
 
@@ -85,10 +98,15 @@ class WzUnitTestSample extends Sprite {
     this.btn = btn;
 
     const input = new TextInput();
-
     input.x = 275;
     input.y = 200;
     this.addChild(input);
+
+    const message = new Message();
+    message.text = 'Hello, Message box';
+    message.x = 50;
+    message.y = 100;
+    this.addChild(message);
 
     this.reset();
   }
@@ -99,7 +117,7 @@ class WzUnitTestSample extends Sprite {
 
   reset() {
     this.pBallContainer.removeChildren();
-    for(var i = 0; i < 500; i++) {
+    for(var i = 0; i < 100; i++) {
       this.addObject();
     }
     this.updateDisplay();
@@ -108,7 +126,7 @@ class WzUnitTestSample extends Sprite {
   ballType() {
     if (this.pType === 'circle') {
       const ball = new Graphics();
-      ball.beginFill(0xCCCCCC);
+      ball.beginFill(Math.floor(Math.random()*16777215));
       ball.lineStyle(1, 0x000000);
       ball.drawCircle(0,0, 20);
       return ball;
@@ -121,9 +139,11 @@ class WzUnitTestSample extends Sprite {
     if (this.pBallContainer.children.length >= 100) {
       return;
     }
+    console.log('New Ball');
     const ball = this.ballType();
+    ball.interactive = true;
     ball.x = gsap.utils.random(10, 540);
-    ball.y = -20;//gsap.utils.random(10, 200);
+    ball.y = 300;//gsap.utils.random(10, 200);
     this.pBallContainer.addChild(ball);
   }
 
@@ -131,7 +151,7 @@ class WzUnitTestSample extends Sprite {
     const count = this.pBallContainer.children.length;
     this.pBallCount.text = `Items: ${count}`;
 
-    gsap.to(this.pBallContainer.children, { stagger: { each: 0.01, repeat: -1 }, ease: 'bounce.out', duration: 1.6, y: 375 });
+    gsap.to(this.pBallContainer.children, { stagger: { each: 0.01, repeat: -1 }, ease: 'bounce.out', duration: 2, y: 375 });
   }
 
   fAction() {
