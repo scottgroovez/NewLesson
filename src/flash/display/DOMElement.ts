@@ -46,16 +46,6 @@ class DOMElement extends Container {
     this.setStyles({})
   }
 
-  public setStyles(styles: Record<string, unknown>) {
-    this.domElementStyles = {
-      ...this.domElementStyles,
-      ...styles,
-    }
-    for(let key in this.domElementStyles){
-			this.domElement.style[key] = this.domElementStyles[key];
-		}
-  }
-
   private addListeners() {
     this.on('added', this.onAdded);
     this.on('removed', this.onRemoved);
@@ -123,6 +113,16 @@ class DOMElement extends Container {
   private pixiMatrixToCSS(m: Matrix) {
 		return 'matrix('+[m.a,m.b,m.c,m.d,m.tx,m.ty].join(',')+')'
 	}
+
+  public setStyles(styles: Record<string, unknown>) {
+    this.domElementStyles = {
+      ...this.domElementStyles,
+      ...styles,
+    }
+    for(let key in this.domElementStyles){
+			this.domElement.style[key] = this.domElementStyles[key];
+		}
+  }
 
 }
 

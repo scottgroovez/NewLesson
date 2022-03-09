@@ -8,12 +8,13 @@ import {
   Ticker,
   Graphics,
   Container,
-  TextInput
 } from '../flash';
 import {
   TextField,
+  TextInput,
   TextFormat,
-  TextFormatAlign
+  TextFormatAlign,
+  TextFieldAutoSize,
 } from '../flash/text';
 
 import { MovieClipSimpleAnimator } from './animation/MovieClipSimpleAnimator';
@@ -130,6 +131,7 @@ class WzUnitTestSample extends Sprite {
     const input = new TextInput();
     input.x = 275;
     input.y = 200;
+    input.autoSize = TextFieldAutoSize.RIGHT;
     this.addChild(input);
 
     const message = new TextField();

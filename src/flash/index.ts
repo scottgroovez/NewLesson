@@ -3,7 +3,6 @@ import { Loader } from './display/Loader';
 import { MovieClip } from './display/MovieClip';
 import { Sprite } from './display/Sprite';
 import { DOMElement } from './display/DOMElement';
-import { TextInput } from './display/TextInput';
 import { Container } from './display/Container';
 import { Application, Graphics, Text, Ticker } from 'pixi.js';
 
@@ -16,7 +15,6 @@ export {
   MovieClip,
   Sprite,
   Text,
-  TextInput,
   DOMElement,
   Ticker,
 };

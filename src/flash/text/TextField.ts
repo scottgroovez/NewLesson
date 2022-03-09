@@ -1,14 +1,15 @@
-import { DOMElement } from "../display/DOMElement";
 import { TextFormat } from "./TextFormat";
+import { BaseText } from "./BaseText";
 
 const defaultStyles = {
   border: '1px solid black',
   borderRadius: '10px',
   background: 'rgba(255, 255, 255, 0.6)',
   padding: '10px',
+  whiteSpace: 'nowrap',
 };
 
-class TextField extends DOMElement {
+class TextField extends BaseText {
   constructor(styles?: Record<string, unknown>) {
     super('p', { ...defaultStyles, ...styles });
   }
@@ -32,12 +33,29 @@ class TextField extends DOMElement {
   }
 
   public setTextFormat(textFormat: TextFormat) {
-    console.log(textFormat.color)
     this.setStyles({
       textDecoration: textFormat.underline ? 'underline' : null,
       fontSize: textFormat.size,
       color: textFormat.color,
     });
+  }
+
+  public set multiline(_multiline:boolean) {
+    this.setStyles({
+      whiteSpace: _multiline ? 'normal' : 'nowrap'
+    })
+  }
+
+  public get multiline():boolean {
+    return this.domElementStyles.whiteSpace === 'normal';
+  }
+
+  public set selectable(_disabled: boolean) {
+    this.domElement.setAttribute('disabled', String(_disabled));
+  }
+
+  public get selectable():boolean {
+    return this.domElement.getAttribute('disabled') === 'true';
   }
 }
 

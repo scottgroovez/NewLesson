@@ -1,10 +1,10 @@
 import { TextStyleAlign } from "@pixi/text";
 
-const TextFormatAlign: Record<string, TextStyleAlign> = {
-  CENTER: 'center',
-  LEFT: 'left',
-  RIGHT: 'right',
-  JUSTIFY: 'justify'
+class TextFormatAlign {
+  static CENTER: TextStyleAlign = 'center';
+  static LEFT: TextStyleAlign = 'left';
+  static RIGHT: TextStyleAlign = 'right';
+  static JUSTIFY: TextStyleAlign = 'justify';
 }
 
 export { TextFormatAlign }

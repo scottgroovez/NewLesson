@@ -1,4 +1,4 @@
-import { DOMElement } from "..";
+import { BaseText } from "./BaseText";
 
 const defaultStyles = {
   fontSize: '40px',
@@ -6,7 +6,7 @@ const defaultStyles = {
   textAlign: 'center',
 }
 
-class TextInput extends DOMElement {
+class TextInput extends BaseText {
   constructor(styles?: Record<string, unknown>) {
     super('input', { ...defaultStyles, ...styles });
   }
