@@ -7,9 +7,9 @@ const defaultStyles = {
 }
 
 class TextInput extends BaseText {
-  //constructor(styles?: Record<string, unknown>) {
-    //super('input', { ...defaultStyles, ...styles });
-  //}
+  constructor(styles?: Record<string, unknown>) {
+    super('input', { ...defaultStyles, ...styles });
+  }
 }
 
 export { TextInput };

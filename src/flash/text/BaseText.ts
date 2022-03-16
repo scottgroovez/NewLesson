@@ -1,7 +1,11 @@
-import { DOMElement } from "../display/DOMElement";
+import { Text } from "../";
 import { TextFieldAutoSize } from "./TextFieldAutoSize";
 
-class BaseText extends DOMElement {
+class BaseText extends Text {
+
+  constructor(text: string = '') {
+    super(text);
+  }
 
   public set autoSize(_autoSize: TextFieldAutoSize) {
     this.setStyles({
@@ -9,8 +13,13 @@ class BaseText extends DOMElement {
     })
   }
 
+
   public get autoSize():TextFieldAutoSize {
-    return this.domElementStyles.textAlign;
+    return true; //Todo fill
+  }
+
+  public setStyles(styles: Record<string, unknown>) {
+    this.style = { ...styles }; //Todo fix
   }
 
 }

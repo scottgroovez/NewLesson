@@ -10,6 +10,17 @@ const defaultStyles = {
 };
 
 class TextField extends BaseText {
+  constructor(styles?: Record<string, unknown>) {
+    super('p', { ...defaultStyles, ...styles });
+  }
+
+  set text(value: string) {
+    this.domElement.innerHTML = value;
+  }
+
+  get text(): string {
+    return this.domElement.innerHTML;
+  }
 
   set bold(_bold:boolean) {
     this.setStyles({
@@ -18,38 +29,33 @@ class TextField extends BaseText {
   }
 
   get bold():boolean {
-    return this.style.fontWeight === 'bold';
+    return this.domElementStyles.fontWeight === 'bold';
   }
 
   public setTextFormat(textFormat: TextFormat) {
-    this.setStyles({ ...textFormat });
+    this.setStyles({
+      textDecoration: textFormat.underline ? 'underline' : null,
+      fontSize: textFormat.size,
+      color: textFormat.color,
+    });
   }
 
   public set multiline(_multiline:boolean) {
     this.setStyles({
-      whiteSpace: _multiline ? 'normal' : 'nowrap',
-      wordWrap: _multiline,
+      whiteSpace: _multiline ? 'normal' : 'nowrap'
     })
   }
 
   public get multiline():boolean {
-    return this.style.whiteSpace === 'normal';
+    return this.domElementStyles.whiteSpace === 'normal';
   }
 
   public set selectable(_disabled: boolean) {
-    //Todo fill
+    this.domElement.setAttribute('disabled', String(_disabled));
   }
 
   public get selectable():boolean {
-    return true; //Todo fill
-  }
-
-  public get textWidth():number {
-    return this.width; //Todo perhaps use PIXI.TextMetrics
-  }
-
-  public get textHeight():number {
-    return this.height;
+    return this.domElement.getAttribute('disabled') === 'true';
   }
 }
 
