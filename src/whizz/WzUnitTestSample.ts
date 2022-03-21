@@ -1,4 +1,5 @@
 import type { AnimateAsset } from '../flash/types';
+import type { InteractionEvent } from '@pixi/interaction';
 import {
   Button,
   Loader,
@@ -11,11 +12,14 @@ import {
 } from '../flash';
 import {
   TextField,
-  TextInput,
   TextFormat,
   TextFormatAlign,
   TextFieldAutoSize,
 } from '../flash/text';
+
+import {
+  SFTextField
+} from './SFTextField';
 
 import { MovieClipSimpleAnimator } from './animation/MovieClipSimpleAnimator';
 import gsap from 'gsap';
@@ -41,16 +45,23 @@ type TFormatType = {
 
 class WzUnitTestSample extends Sprite {
   static pIgnoreFrameEventFromGoToAndStop: boolean;
+  stage: Container;
   pAnimator!: MovieClipSimpleAnimator;
   pSkin!: AnimateAsset;
   pLoader!: Loader;
   pFps!: Text;
+  pText!: SFTextField;
   pBallCount!: Text;
   pBallContainer!: Container;
   pType: 'circle' | 'ball' = 'circle';
   btn!: Button;
-  constructor() {
+  pWorms!: MovieClip;
+  //pClickPos!:Point;
+	pClickTime!:number;
+  pHitTester!: Sprite;
+  constructor(_stage: Container) {
     super();
+    this.stage = _stage; // Todo: Can this be obtained without being passed to it?
     this.fSetup();
   }
 
@@ -90,12 +101,15 @@ class WzUnitTestSample extends Sprite {
     this.addChild(this.pBallContainer);
 
     const anim = this.fGetDisplayObject('payoff2') as MovieClip;
+    anim.interactive = true;
     anim.x = 275;
     anim.y = 350;
+
+    anim.on('click', () => this.pText.text = 'Worms clicked!');
     this.addChild(anim);
 
-
-
+    this.pWorms = anim;
+    /*
     this.pFps = new Text('');
     this.pFps.x = 10;
     this.pFps.y = 10;
@@ -105,17 +119,12 @@ class WzUnitTestSample extends Sprite {
     this.pBallCount.x = 10;
     this.pBallCount.y = 50;
     this.addChild(this.pBallCount);
+    */
 
     this.pAnimator = new MovieClipSimpleAnimator(anim, 20);
     this.pAnimator.fSetCallback(() => this.fRunIt());
 
-    Ticker.shared
-    .add(() => this.fAction())
-
-    this.fRunIt();
-
-    setInterval(() => this.pFps.text = `FPS: ${Math.round(Ticker.shared.FPS)}`, 100);
-
+    /*
     const btn = new Button(this.getLabel());
     btn.x = 60;
     btn.y = 380;
@@ -127,23 +136,182 @@ class WzUnitTestSample extends Sprite {
     this.addChild(btn);
 
     this.btn = btn;
+    */
 
+    /*
     const input = new TextInput();
     input.x = 275;
     input.y = 200;
     input.autoSize = TextFieldAutoSize.RIGHT;
     this.addChild(input);
+    */
 
+    /*
     const message = new TextField();
     message.text = 'Hello, Message box';
     message.bold = true;
     message.x = 50;
     message.y = 100;
     this.addChild(message);
-
     this.fSetFormat(message, { nColour: '#115b05', nFontSize: 25, nBold: true, nUnderline: true })
+    */
 
-    this.reset();
+    const tText:SFTextField = new SFTextField();
+		tText.x = 550 / 2; //Todo: stageWidth & stageHeight;
+		tText.y = 275 / 2;
+		this.addChild(tText);
+		this.fSetFormat(tText, { nFontSize: 25, nBold: true });
+		//tText.fSetText("Wello Horld")
+		tText.text = "Wello Horld";
+		this.pText = tText;
+
+    const tTest:Sprite = new Sprite();
+    tTest.interactive = true;
+    tTest.graphics.beginFill(0xff0000);
+    tTest.graphics.drawCircle(0, 0, 30);
+    this.addChild(tTest);
+    tTest.x = tTest.y = 20;
+
+    const tParagraph:Sprite = this.fCreateTextParagraph("This is a paragraph of text laid out using textWidth and textHeight without spaces");
+    tParagraph.x = 20;
+    tParagraph.y = 20;
+    this.addChild(tParagraph);
+
+    const tTest2 = new Sprite();
+    tTest2.interactive = true;
+		tTest2.graphics.beginFill(0x00ff00, 0.9);
+		tTest2.graphics.drawCircle(0, 0, 30);
+		this.addChild(tTest2);
+		tTest2.x = tTest2.y = 60;
+    
+    const pHitTester = new Sprite();
+    pHitTester.graphics.beginFill(0, 0.1);
+    pHitTester.graphics.drawCircle(0, 0, 30);
+    this.addChild(pHitTester);
+
+    //this.stage.on('pointerdown', this.fListener);
+    this.stage.on('click', (e) => {
+
+      const interaction = renderer.plugins.interaction;
+      const mousePosition = interaction.mouse.global;
+
+      console.log('hitTestPoint: this.pWorms', this.pWorms.hitTestPoint(mousePosition.x, mousePosition.y));
+      console.log('getObjectUnderPoint', this.getObjectUnderPoint(mousePosition));
+      console.log('getObjectsUnderPoint', this.getObjectsUnderPoint(mousePosition));
+      console.log('hitTestObject', tTest.hitTestObject(tTest2));
+
+      this.fListener(e);
+    });
+    //document.addEventListener('mousedown', this.fListener);
+    this.pHitTester = pHitTester;
+
+    Ticker.shared.add(() => this.fAction())
+
+    //setInterval(() => this.pFps.text = `FPS: ${Math.round(Ticker.shared.FPS)}`, 100);
+    
+    this.fRunIt();
+    //this.reset();
+  }
+
+  private fListener = (e:InteractionEvent):void => {
+      let tTrace:string = '';
+      switch (e.type) {
+        case 'pointerdown':
+        case 'mousedown':
+          //pClickTime = getTimer()
+          //pClickPos = new Point(stage.mouseX, stage.mouseY)
+          tTrace = "MouseDown"
+          //tCheckClickOn = true
+        break;
+      }
+
+      const p = e.data.global;
+      this.pHitTester.x = p.x;
+      this.pHitTester.y = p.y;
+
+      /*
+      const renderer = PIXI.autoDetectRenderer();
+      const interaction = renderer.plugins.interaction;
+      const mousePosition = interaction.mouse.global;
+      const hitObject = interaction.hitTestFn(this.pWorms, mousePosition);
+      */
+     // this.pText.text = tTrace;
+
+			/*
+			switch (e.type)
+			{
+			case MouseEvent.CLICK: 
+				var tPos:Point = new Point(stage.mouseX, stage.mouseY)
+				if (tPos.subtract(pClickPos).length > 5 || getTimer() - pClickTime > 500)
+				{
+					return
+				}
+				var tTrace:String = "Click"
+				var tCheckClickOn:Boolean = true
+				break
+			case MouseEvent.MOUSE_DOWN: 
+				
+				break
+			case MouseEvent.MOUSE_UP: 
+				tTrace = "MouseUp"
+				tCheckClickOn = true
+				break
+			case KeyboardEvent.KEY_DOWN: 
+				tTrace = "KeyDown " + String.fromCharCode((e as KeyboardEvent).charCode)
+				tCheckClickOn = false
+				break
+			case KeyboardEvent.KEY_UP: 
+				tTrace = "KeyUp " + String.fromCharCode((e as KeyboardEvent).charCode)
+				tCheckClickOn = false
+				break
+				
+			}
+			if (tCheckClickOn) {
+				pHitTester.x = stage.mouseX
+				pHitTester.y = stage.mouseY
+				var tHitTestObj:Boolean = pWorms.hitTestObject(pHitTester)
+				var tHitTestPt:Boolean = pWorms.hitTestPoint(stage.mouseX, stage.mouseY, true)
+				tTrace += "\n"+tHitTestObj+" " + tHitTestPt
+			}
+			if (e.type == MouseEvent.CLICK && tHitTestObj) {
+				WzSimplifiedSoundManager.fPlaySound(fGetSound("n650EA1_boing"))
+			}
+			
+			pText.fSetText(tTrace)
+      */
+		
+		}
+
+  private fCreateTextParagraph(tString:string, tWidth:number = 200):Sprite
+  {
+    const tSplit:string[] = tString.split(" ")
+    let tSprite:Sprite = new Sprite()
+    let tField:SFTextField = new SFTextField()
+    let tFormat = { nFontSize: 20 }
+    this.fSetFormat(tField, tFormat)
+    //tField.fSetText("Aph")
+    tField.text = "Aph";
+    var tX:number = 0
+    var tY:number = 0
+    //var tLineHeight:number = tField.pField.textHeight + 2
+    var tLineHeight:number = tField.textHeight + 2
+    tSplit.forEach((tWord:string) => {
+      tField = new SFTextField()
+      tSprite.addChild(tField)
+      this.fSetFormat(tField, tFormat)
+      //tField.fSetText(tWord)
+      tField.text = tWord;
+      //if (tField.pField.textWidth + tX > tWidth && tX > 0) {
+      if (tField.textWidth + tX > tWidth && tX > 0) {
+        tX = 0
+        tY += tLineHeight
+      }
+      tField.x = tX
+      tField.y = tY
+      //tX += tField.pField.textWidth
+      tX += tField.textWidth
+    })
+    return tSprite
   }
 
   getLabel() {
