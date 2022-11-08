@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@pixi/animate": "^2.0.0",
+    "@pixi/sound": "4.2.0",
     "eslint": "^6.8.0",
     "global": "^4.4.0",
     "gsap": "^3.9.1",
